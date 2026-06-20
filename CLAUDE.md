@@ -49,32 +49,27 @@ All infrastructure and deployment tasks are handled via skills. Do not write Ter
 
 ```
 /scaffold-terraform [region] [name]  → Generate all Terraform files (uses tf-writer agent)
-/scaffold-cicd [aws-account-id]      → Generate GitHub Actions + OIDC IAM role
+/setup-gh-actions [create|validate]  → Generate or validate GitHub Actions CI workflow
 /tf-plan                             → Run terraform plan + risk analysis
-/tf-apply                            → Run terraform apply + verify
+/tf-apply                            → Run terraform apply + verify (auto-approved, sentinel-gated)
 /deploy                              → Sync S3 + invalidate CloudFront
 /infra-status                        → Health dashboard of all resources
 /infra-audit                         → Parallel security + cost + drift audit (forked context)
-/setup-gh-actions [create|validate]  → Create or validate CI workflow
-/tf-destroy                          → Safe destroy with confirmation
-project-scope                        → Background knowledge: AWS service constraints (auto-loaded)
+/tf-destroy                          → Empty S3 bucket + terraform destroy (auto-approved, sentinel-gated)
 /commit                              → Auto-generate commit message (built-in)
 /compact                             → Compress long conversation context (built-in)
 ```
 
 ## Commands
 
+Use skills for all infrastructure and deployment tasks — do not run raw Terraform or AWS CLI commands manually.
+
 ```bash
-# Terraform
+# Terraform init (one-time setup only — not covered by a skill)
 cd terraform && terraform init
-cd terraform && terraform plan
-cd terraform && terraform apply
 
 # Local preview
 open index.html
-
-# Manual S3 sync (CI does this automatically)
-aws s3 sync . s3://$BUCKET_NAME --exclude "terraform/*" --exclude ".git/*" --exclude ".github/*" --exclude "*.md" --exclude ".claude/*"
 ```
 
 ## Safety Layers

@@ -3,3 +3,4 @@
 .claude/settings.json
 .mcp.json
 notes.txt
+.claude/agent-memory/

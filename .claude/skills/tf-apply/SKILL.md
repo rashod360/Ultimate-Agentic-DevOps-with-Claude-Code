@@ -5,7 +5,9 @@ allowed-tools: Bash, Read
 disable-model-invocation: true
 ---
 
-Run `cd terraform && terraform apply -auto-approve -no-color` and verify the results.
+First, drop the authorization sentinel: `touch .claude/.tf-apply-authorized`
+
+Then run `cd terraform && terraform apply -auto-approve -no-color` and verify the results.
 
 After apply completes:
 - [ ] Show the key outputs (CloudFront URL, S3 bucket name, distribution ID)
