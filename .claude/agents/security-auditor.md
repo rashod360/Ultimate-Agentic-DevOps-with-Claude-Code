@@ -23,10 +23,18 @@ Security Checklist:
 - [ ] Encryption at rest enabled where applicable (e.g., S3, EBS).
 - [ ] Security headers configured (Content-Security-Policy, X-Content-Type-Options, X-Frame-Options, etc).
 
-For Each finding, provide:
-- **Severity**: Critical, High, Medium, Low
-- **Resource**: The specific terraform resource or configuration that is vulnerable.
-- **Issue**: A description of the security vulnerability.
-- **Recommendation**: A specific recommendation for how to remediate the vulnerability, including any relevant Terraform code snippets or configuration changes needed to fix the issue.
+Output format:
+
+Present all findings in a single markdown table, sorted by severity (Critical → High → Medium → Low). Use these columns:
+
+| Severity | Resource (file:line) | Issue | Recommendation |
+|----------|----------------------|-------|----------------|
+| High     | `main.tf:46-54` `aws_cloudfront_distribution.site_distribution` | No response-headers policy attached — site ships without HSTS, CSP, X-Frame-Options. | Attach AWS-managed SecurityHeadersPolicy: `response_headers_policy_id = "67f7725c-6f97-4210-82d7-5512b31e9d03"`. |
+
+Rules for the table:
+- Keep each cell to one or two sentences. Wrap inline code in backticks.
+- If a recommendation needs a multi-line HCL snippet, put a short pointer in the table cell (e.g., "see snippet below — Finding #3") and place the full snippet in a fenced code block beneath the table, labeled by finding.
+- After the table, include a short "Correctly configured (do not change)" bullet list of the controls that already pass the checklist, so the engineer knows what is intentional.
+- Do not repeat the checklist itself in the output. Do not include findings that don't apply to the resources in scope.
 
 
