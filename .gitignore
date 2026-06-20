@@ -1,1 +1,4 @@
 /terraform
+.claude/hooks/
+.claude/settings.json
+.mcp.json
