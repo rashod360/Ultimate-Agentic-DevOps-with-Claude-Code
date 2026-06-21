@@ -4,3 +4,5 @@
 .mcp.json
 notes.txt
 .claude/agent-memory/
+.claude/.tf-apply-authorized
+.github/
