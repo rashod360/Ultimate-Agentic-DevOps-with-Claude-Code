@@ -1,0 +1,44 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+# Required for OIDC token exchange
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::711396988852:role/github-actions-rashodholmes
+          aws-region: us-east-1
+
+      - name: Sync site files to S3
+        run: |
+          aws s3 sync . s3://rashodholmes-static-site-production \
+            --exclude "terraform/*" \
+            --exclude ".gitignore" \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "*.md" \
+            --exclude ".claude/*" \
+            --exclude ".cursor/*" \
+            --exclude ".mcp.json" \
+            --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id EGTJAZBHQWYO2 \
+            --paths "/*"
